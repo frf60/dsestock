@@ -1,5 +1,1060 @@
 {
-  "generated_at": "2026-07-11T17:56:57.857805Z",
-  "disclaimer": "Automated technical signals. Protected multi-channel cloud architecture.",
-  "stocks": {}
+  "generated_at": "2026-07-11T18:01:54.980002Z",
+  "disclaimer": "Automated technical engine with built-in high-availability persistence layers.",
+  "stocks": {
+    "AL-ARAFABH": {
+      "category": "A",
+      "price": 100.0,
+      "change": 0.0,
+      "analysis": {
+        "3_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_week": {
+          "mood": "Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "15_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_month": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        }
+      }
+    },
+    "BATBC": {
+      "category": "A",
+      "price": 100.0,
+      "change": 0.0,
+      "analysis": {
+        "3_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_week": {
+          "mood": "Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "15_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_month": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        }
+      }
+    },
+    "BERGERPBL": {
+      "category": "A",
+      "price": 100.0,
+      "change": 0.0,
+      "analysis": {
+        "3_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_week": {
+          "mood": "Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "15_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_month": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        }
+      }
+    },
+    "BEXIMCO": {
+      "category": "A",
+      "price": 100.0,
+      "change": 0.0,
+      "analysis": {
+        "3_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_week": {
+          "mood": "Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "15_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_month": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        }
+      }
+    },
+    "BRACBANK": {
+      "category": "A",
+      "price": 100.0,
+      "change": 0.0,
+      "analysis": {
+        "3_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_week": {
+          "mood": "Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "15_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_month": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        }
+      }
+    },
+    "BSRMLTD": {
+      "category": "A",
+      "price": 100.0,
+      "change": 0.0,
+      "analysis": {
+        "3_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_week": {
+          "mood": "Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "15_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_month": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        }
+      }
+    },
+    "BSRMSTEEL": {
+      "category": "A",
+      "price": 100.0,
+      "change": 0.0,
+      "analysis": {
+        "3_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_week": {
+          "mood": "Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "15_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_month": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        }
+      }
+    },
+    "BXPHARMA": {
+      "category": "A",
+      "price": 100.0,
+      "change": 0.0,
+      "analysis": {
+        "3_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_week": {
+          "mood": "Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "15_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_month": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        }
+      }
+    },
+    "CITYBANK": {
+      "category": "A",
+      "price": 100.0,
+      "change": 0.0,
+      "analysis": {
+        "3_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_week": {
+          "mood": "Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "15_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_month": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        }
+      }
+    },
+    "EBL": {
+      "category": "A",
+      "price": 100.0,
+      "change": 0.0,
+      "analysis": {
+        "3_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_week": {
+          "mood": "Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "15_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_month": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        }
+      }
+    },
+    "EXIMBANK": {
+      "category": "A",
+      "price": 100.0,
+      "change": 0.0,
+      "analysis": {
+        "3_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_week": {
+          "mood": "Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "15_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_month": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        }
+      }
+    },
+    "GP": {
+      "category": "A",
+      "price": 100.0,
+      "change": 0.0,
+      "analysis": {
+        "3_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_week": {
+          "mood": "Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "15_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_month": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        }
+      }
+    },
+    "GPHISPAT": {
+      "category": "A",
+      "price": 100.0,
+      "change": 0.0,
+      "analysis": {
+        "3_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_week": {
+          "mood": "Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "15_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_month": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        }
+      }
+    },
+    "HEIDELBCEM": {
+      "category": "A",
+      "price": 100.0,
+      "change": 0.0,
+      "analysis": {
+        "3_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_week": {
+          "mood": "Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "15_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_month": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        }
+      }
+    },
+    "IDLC": {
+      "category": "A",
+      "price": 100.0,
+      "change": 0.0,
+      "analysis": {
+        "3_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_week": {
+          "mood": "Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "15_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_month": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        }
+      }
+    },
+    "ISLAMIBANK": {
+      "category": "A",
+      "price": 100.0,
+      "change": 0.0,
+      "analysis": {
+        "3_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_week": {
+          "mood": "Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "15_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_month": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        }
+      }
+    },
+    "JAMUNAOIL": {
+      "category": "A",
+      "price": 100.0,
+      "change": 0.0,
+      "analysis": {
+        "3_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_week": {
+          "mood": "Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "15_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_month": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        }
+      }
+    },
+    "KPCL": {
+      "category": "B",
+      "price": 100.0,
+      "change": 0.0,
+      "analysis": {
+        "3_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_week": {
+          "mood": "Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "15_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_month": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        }
+      }
+    },
+    "LANKABAFIN": {
+      "category": "B",
+      "price": 100.0,
+      "change": 0.0,
+      "analysis": {
+        "3_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_week": {
+          "mood": "Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "15_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_month": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        }
+      }
+    },
+    "LHBL": {
+      "category": "A",
+      "price": 100.0,
+      "change": 0.0,
+      "analysis": {
+        "3_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_week": {
+          "mood": "Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "15_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_month": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        }
+      }
+    },
+    "LINDEBD": {
+      "category": "A",
+      "price": 100.0,
+      "change": 0.0,
+      "analysis": {
+        "3_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_week": {
+          "mood": "Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "15_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_month": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        }
+      }
+    },
+    "MARICO": {
+      "category": "A",
+      "price": 100.0,
+      "change": 0.0,
+      "analysis": {
+        "3_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_week": {
+          "mood": "Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "15_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_month": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        }
+      }
+    },
+    "MJSBL": {
+      "category": "A",
+      "price": 100.0,
+      "change": 0.0,
+      "analysis": {
+        "3_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_week": {
+          "mood": "Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "15_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_month": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        }
+      }
+    },
+    "MPETROLEUM": {
+      "category": "A",
+      "price": 100.0,
+      "change": 0.0,
+      "analysis": {
+        "3_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_week": {
+          "mood": "Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "15_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_month": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        }
+      }
+    },
+    "NBL": {
+      "category": "B",
+      "price": 100.0,
+      "change": 0.0,
+      "analysis": {
+        "3_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_week": {
+          "mood": "Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "15_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_month": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        }
+      }
+    },
+    "OLYMPIC": {
+      "category": "A",
+      "price": 100.0,
+      "change": 0.0,
+      "analysis": {
+        "3_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_week": {
+          "mood": "Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "15_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_month": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        }
+      }
+    },
+    "ONEBANKLTD": {
+      "category": "A",
+      "price": 100.0,
+      "change": 0.0,
+      "analysis": {
+        "3_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_week": {
+          "mood": "Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "15_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_month": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        }
+      }
+    },
+    "PADMAOIL": {
+      "category": "A",
+      "price": 100.0,
+      "change": 0.0,
+      "analysis": {
+        "3_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_week": {
+          "mood": "Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "15_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_month": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        }
+      }
+    },
+    "PRIMEBANK": {
+      "category": "A",
+      "price": 100.0,
+      "change": 0.0,
+      "analysis": {
+        "3_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_week": {
+          "mood": "Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "15_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_month": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        }
+      }
+    },
+    "RENATA": {
+      "category": "A",
+      "price": 100.0,
+      "change": 0.0,
+      "analysis": {
+        "3_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_week": {
+          "mood": "Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "15_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_month": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        }
+      }
+    },
+    "SQURPHARMA": {
+      "category": "A",
+      "price": 100.0,
+      "change": 0.0,
+      "analysis": {
+        "3_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_week": {
+          "mood": "Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "15_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_month": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        }
+      }
+    },
+    "TITASGAS": {
+      "category": "A",
+      "price": 100.0,
+      "change": 0.0,
+      "analysis": {
+        "3_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_week": {
+          "mood": "Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "15_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_month": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        }
+      }
+    },
+    "UCB": {
+      "category": "A",
+      "price": 100.0,
+      "change": 0.0,
+      "analysis": {
+        "3_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_week": {
+          "mood": "Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "15_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_month": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        }
+      }
+    },
+    "UPGDCL": {
+      "category": "A",
+      "price": 100.0,
+      "change": 0.0,
+      "analysis": {
+        "3_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_week": {
+          "mood": "Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "15_days": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        },
+        "1_month": {
+          "mood": "Strong Sell",
+          "entry": 100.0,
+          "sl": 103.0,
+          "exit": 94.0
+        }
+      }
+    }
+  }
 }
