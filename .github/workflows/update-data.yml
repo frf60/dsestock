@@ -29,11 +29,9 @@ jobs:
       - name: Run analyzer
         run: python scripts/analyzer.py
 
-      - name: Commit updated data
-        run: |
-          git config user.name "dse-dashboard-bot"
-          git config user.email "actions@users.noreply.github.com"
-          git add data.json data/ || true
-          git diff --staged --quiet || git commit -m "chore: update DSE A/B signals"
-          git push
+      - name: Run analyzer
+        env:
+          HTTP_PROXY: http://45.77.56.114:8080   # Example public proxy
+          HTTPS_PROXY: http://45.77.56.114:8080
+        run: python scripts/analyzer.py
 
