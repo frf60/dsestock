@@ -1,3 +1,4 @@
+
 """
 DSE Advanced Trading Dashboard - Yahoo Finance Backend
 ======================================================
@@ -25,15 +26,8 @@ TIMEFRAMES = {
     "1_month": 22,
 }
 
-def looks_like_fund(ticker: str) -> bool:
-    t = ticker.upper()
-    return t[:1].isdigit() or "MF" in t
-
 def load_category_map() -> dict[str, str]:
-    """
-    Loads categories. If cache doesn't exist, initializes with a fallback list 
-    of prominent DSE A/B shares to keep the script fully autonomous.
-    """
+    """Loads categories. If cache doesn't exist, initializes with a fallback list."""
     if CATEGORY_CACHE.exists():
         try:
             return json.loads(CATEGORY_CACHE.read_text())
@@ -45,7 +39,10 @@ def load_category_map() -> dict[str, str]:
         "GP": "A", "BATBC": "A", "SQURPHARMA": "A", "RENATA": "A", "BEXIMCO": "A",
         "BRACBANK": "A", "EBL": "A", "CITYBANK": "A", "JAMUNAOIL": "A", "MPETROLEUM": "A",
         "LINDEBD": "A", "BERGERPBL": "A", "LHBL": "A", "MARICO": "A", "UPGDCL": "A",
-        "ISLAMIBANK": "A", "HEIDELBCEM": "A", "BSRMLTD": "A", "PADMAOIL": "A", "OLYMPIC": "A"
+        "ISLAMIBANK": "A", "HEIDELBCEM": "A", "BSRMLTD": "A", "PADMAOIL": "A", "OLYMPIC": "A",
+        "BSRMSTEEL": "A", "BXPHARMA": "A", "TITASGAS": "A", "KPCL": "B", "GPHISPAT": "A",
+        "MJSBL": "A", "IDLC": "A", "LANKABAFIN": "B", "UCB": "A", "ONEBANKLTD": "A",
+        "PRIMEBANK": "A", "AL-ARAFABH": "A", "EXIMBANK": "A", "NBL": "B"
     }
     
     DATA_DIR.mkdir(exist_ok=True, parents=True)
@@ -75,7 +72,7 @@ def atr(df: pd.DataFrame, period: int = 14) -> Optional[float]:
 
 def compute_signal(current_price: float, hist: pd.DataFrame, lookback: int) -> dict:
     if len(hist) < lookback + 1 or "close" not in hist.columns:
-        return {"mood": "Neutral", "entry": "-", "sl": "-", "exit": "-", "note": "insufficient_history"}
+        return {"mood": "Neutral", "entry": "-", "sl": "-", "exit": "-"}
 
     closes = hist["close"]
     sma = closes.iloc[-lookback:].mean()
@@ -113,7 +110,7 @@ def compute_signal(current_price: float, hist: pd.DataFrame, lookback: int) -> d
         exit_target = round(entry - (sl - entry) * 2, 2)
         if exit_target <= 0: exit_target = round(entry * 0.9, 2)
 
-    return {"mood": mood, "entry": entry, "sl": sl, "exit": exit_target, "rsi": rsi_val}
+    return {"mood": mood, "entry": entry, "sl": sl, "exit": exit_target}
 
 def main() -> None:
     DATA_DIR.mkdir(exist_ok=True)
@@ -125,11 +122,9 @@ def main() -> None:
 
     for ticker in tickers:
         try:
-            # DSE tickers on Yahoo Finance use the .BD suffix
             yf_ticker = f"{ticker}.BD"
             stock = yf.Ticker(yf_ticker)
             
-            # Fetch 6 months of history to cover all lookback windows safely
             hist = stock.history(period="6mo")
             if hist.empty:
                 print(f"[warn] No data found for {yf_ticker}")
@@ -137,7 +132,6 @@ def main() -> None:
                 
             hist.columns = [str(c).strip().lower() for c in hist.columns]
             
-            # Get current metadata
             price = float(hist["close"].iloc[-1])
             prev_close = float(hist["close"].iloc[-2]) if len(hist) > 1 else price
             pct_change = round(((price - prev_close) / prev_close) * 100, 2)
@@ -157,7 +151,7 @@ def main() -> None:
         except Exception as exc:
             print(f"[warn] Failed to process {ticker}: {exc}")
 
-    # Write output to the main data.json file
+    # Write output directly into data.json for the frontend
     DATA_JSON.write_text(
         json.dumps(
             {
