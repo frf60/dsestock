@@ -29,9 +29,5 @@ jobs:
       - name: Run analyzer
         run: python scripts/analyzer.py
 
-      - name: Run analyzer
-        env:
-          HTTP_PROXY: http://45.77.56.114:8080   # Example public proxy
-          HTTPS_PROXY: http://45.77.56.114:8080
+            - name: Run analyzer
         run: python scripts/analyzer.py
-
