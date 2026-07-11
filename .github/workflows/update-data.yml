@@ -1,1 +1,39 @@
+name: Update DSE A/B Trading Signals
+
+on:
+  schedule:
+    # Every 30 minutes during DSE trading hours (Sun-Thu ~10:00-14:30 Asia/Dhaka = 04:00-08:30 UTC)
+    - cron: '0,30 4-8 * * 0-4'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-data
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run analyzer
+        run: python scripts/analyzer.py
+
+      - name: Commit updated data
+        run: |
+          git config user.name "dse-dashboard-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data.json data/
+          git diff --cached --quiet || git commit -m "chore: update DSE A/B signals"
+          git push
 
