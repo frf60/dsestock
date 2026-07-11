@@ -1,6 +1,6 @@
 """
-DSE Advanced Trading Dashboard - Analyzer (Fully Restored)
-==========================================================
+DSE Advanced Trading Dashboard - Yahoo Finance Backend
+======================================================
 """
 
 from __future__ import annotations
@@ -10,29 +10,13 @@ import time
 import datetime as dt
 from pathlib import Path
 from typing import Optional
-import urllib3
-
-import requests
 import pandas as pd
-from bdshare import get_current_trade_data, get_basic_historical_data, BDShareError
-
-# Disable annoying SSL warnings safely
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+import yfinance as yf
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT / "data"
-HIST_DIR = DATA_DIR / "history"
 DATA_JSON = ROOT / "data.json"
 CATEGORY_CACHE = DATA_DIR / "categories.json"
-REFRESH_MARKER = DATA_DIR / "last_full_refresh.txt"
-
-# Real browser headers to look human
-HEADERS = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
-    "Accept-Language": "en-US,en;q=0.5",
-}
-CATEGORY_URL = "https://www.dsebd.org/latest_share_price_scroll_group.php?group={group}"
 
 TIMEFRAMES = {
     "3_days": 3,
@@ -41,78 +25,32 @@ TIMEFRAMES = {
     "1_month": 22,
 }
 
-CATEGORY_MAX_AGE_HOURS = 24
-FULL_HISTORY_MAX_AGE_HOURS = 20
-HIST_LOOKBACK_DAYS = 150
-
 def looks_like_fund(ticker: str) -> bool:
     t = ticker.upper()
     return t[:1].isdigit() or "MF" in t
 
-def fetch_category_tickers(group: str) -> list[str]:
-    """Scrape one DSE category page (A or B) for its list of trading codes."""
-    url = CATEGORY_URL.format(group=group)
-    resp = requests.get(url, headers=HEADERS, timeout=60, verify=False)
-    resp.raise_for_status()
-    tables = pd.read_html(resp.text)
-    for table in tables:
-        code_col = next((c for c in table.columns if "TRADING" in str(c).upper()), None)
-        if code_col is not None:
-            return table[code_col].astype(str).str.strip().replace("", pd.NA).dropna().tolist()
-    return []
-
 def load_category_map() -> dict[str, str]:
+    """
+    Loads categories. If cache doesn't exist, initializes with a fallback list 
+    of prominent DSE A/B shares to keep the script fully autonomous.
+    """
     if CATEGORY_CACHE.exists():
-        age_h = (time.time() - CATEGORY_CACHE.stat().st_mtime) / 3600
-        if age_h < CATEGORY_MAX_AGE_HOURS:
+        try:
             return json.loads(CATEGORY_CACHE.read_text())
+        except Exception:
+            pass
 
-    mapping: dict[str, str] = {}
-    for group in ("A", "B"):
-        try:
-            for ticker in fetch_category_tickers(group):
-                if not looks_like_fund(ticker):
-                    mapping[ticker] = group
-        except Exception as exc:
-            print(f"[warn] could not fetch category {group}: {exc}")
-
-    if mapping:
-        DATA_DIR.mkdir(exist_ok=True)
-        CATEGORY_CACHE.write_text(json.dumps(mapping, indent=2))
-    elif CATEGORY_CACHE.exists():
-        mapping = json.loads(CATEGORY_CACHE.read_text())
-    return mapping
-
-def full_history_is_stale() -> bool:
-    if not REFRESH_MARKER.exists():
-        return True
-    age_h = (time.time() - REFRESH_MARKER.stat().st_mtime) / 3600
-    return age_h >= FULL_HISTORY_MAX_AGE_HOURS
-
-def refresh_history(tickers: list[str]) -> None:
-    HIST_DIR.mkdir(parents=True, exist_ok=True)
-    end = dt.date.today()
-    start = end - dt.timedelta(days=HIST_LOOKBACK_DAYS)
-    ok, failed = 0, 0
-    for i, ticker in enumerate(tickers, 1):
-        try:
-            df = get_basic_historical_data(str(start), str(end), ticker)
-            if df is not None and not df.empty:
-                df.to_csv(HIST_DIR / f"{ticker}.csv")
-                ok += 1
-        except Exception as exc:
-            failed += 1
-            print(f"[warn] history fetch failed for {ticker}: {exc}")
-    REFRESH_MARKER.write_text(dt.datetime.utcnow().isoformat())
-    print(f"History refresh done: {ok} ok, {failed} failed")
-
-def load_history(ticker: str) -> Optional[pd.DataFrame]:
-    path = HIST_DIR / f"{ticker}.csv"
-    if not path.exists():
-        return None
-    df = pd.read_csv(path, index_col=0, parse_dates=True)
-    df.columns = [str(c).strip().lower() for c in df.columns]
-    return df.sort_index()
+    # High-signal fallback list of major DSE A & B category stocks
+    fallback = {
+        "GP": "A", "BATBC": "A", "SQURPHARMA": "A", "RENATA": "A", "BEXIMCO": "A",
+        "BRACBANK": "A", "EBL": "A", "CITYBANK": "A", "JAMUNAOIL": "A", "MPETROLEUM": "A",
+        "LINDEBD": "A", "BERGERPBL": "A", "LHBL": "A", "MARICO": "A", "UPGDCL": "A",
+        "ISLAMIBANK": "A", "HEIDELBCEM": "A", "BSRMLTD": "A", "PADMAOIL": "A", "OLYMPIC": "A"
+    }
+    
+    DATA_DIR.mkdir(exist_ok=True, parents=True)
+    CATEGORY_CACHE.write_text(json.dumps(fallback, indent=2))
+    return fallback
 
 def rsi(series: pd.Series, period: int) -> Optional[float]:
     if len(series) < period + 1:
@@ -126,8 +64,8 @@ def rsi(series: pd.Series, period: int) -> Optional[float]:
         return 100.0
     return round(100 - (100 / (1 + avg_gain / avg_loss)), 2)
 
-def atr(df: Optional[pd.DataFrame], period: int = 14) -> Optional[float]:
-    if df is None or len(df) < period + 1 or not {"high", "low", "close"}.issubset(df.columns):
+def atr(df: pd.DataFrame, period: int = 14) -> Optional[float]:
+    if len(df) < period + 1 or not {"high", "low", "close"}.issubset(df.columns):
         return None
     high, low, close = df["high"], df["low"], df["close"]
     prev_close = close.shift(1)
@@ -135,13 +73,13 @@ def atr(df: Optional[pd.DataFrame], period: int = 14) -> Optional[float]:
     val = tr.rolling(period).mean().iloc[-1]
     return round(val, 2) if pd.notna(val) else None
 
-def compute_signal(current_price: float, hist: Optional[pd.DataFrame], lookback: int) -> dict:
-    if hist is None or len(hist) < lookback + 1 or "close" not in hist.columns:
+def compute_signal(current_price: float, hist: pd.DataFrame, lookback: int) -> dict:
+    if len(hist) < lookback + 1 or "close" not in hist.columns:
         return {"mood": "Neutral", "entry": "-", "sl": "-", "exit": "-", "note": "insufficient_history"}
 
-    closes = pd.concat([hist["close"], pd.Series([current_price])], ignore_index=True)
-    sma = closes.iloc[-(lookback + 1):-1].mean()
-    price_n_ago = closes.iloc[-(lookback + 1)]
+    closes = hist["close"]
+    sma = closes.iloc[-lookback:].mean()
+    price_n_ago = closes.iloc[-lookback]
     momentum_pct = ((current_price - price_n_ago) / price_n_ago * 100) if price_n_ago else 0
 
     rsi_period = min(max(lookback, 3), 14)
@@ -180,55 +118,58 @@ def compute_signal(current_price: float, hist: Optional[pd.DataFrame], lookback:
 def main() -> None:
     DATA_DIR.mkdir(exist_ok=True)
     categories = load_category_map()
-    if not categories:
-        print("[error] no A/B category tickers found - aborting")
-        return
-
     tickers = sorted(categories.keys())
-    print(f"Tracking {len(tickers)} A/B category tickers")
-
-    if full_history_is_stale():
-        print("Refreshing full OHLCV history...")
-        refresh_history(tickers)
-
-    try:
-        live_df = get_current_trade_data()
-    except Exception as exc:
-        print(f"[error] could not fetch live prices: {exc}")
-        return
-
-    live_df["symbol"] = live_df["symbol"].astype(str).str.strip().str.upper()
-    live_df = live_df.set_index("symbol")
-
+    
+    print(f"Tracking {len(tickers)} tickers via Yahoo Finance backend...")
     output = {}
+
     for ticker in tickers:
-        if ticker not in live_df.index: continue
-        row = live_df.loc[ticker]
-        price = float(row.get("ltp") or row.get("close") or 0)
-        if price <= 0: continue
+        try:
+            # DSE tickers on Yahoo Finance use the .BD suffix
+            yf_ticker = f"{ticker}.BD"
+            stock = yf.Ticker(yf_ticker)
+            
+            # Fetch 6 months of history to cover all lookback windows safely
+            hist = stock.history(period="6mo")
+            if hist.empty:
+                print(f"[warn] No data found for {yf_ticker}")
+                continue
+                
+            hist.columns = [str(c).strip().lower() for c in hist.columns]
+            
+            # Get current metadata
+            price = float(hist["close"].iloc[-1])
+            prev_close = float(hist["close"].iloc[-2]) if len(hist) > 1 else price
+            pct_change = round(((price - prev_close) / prev_close) * 100, 2)
 
-        hist = load_history(ticker)
-        analysis = {tf: compute_signal(price, hist, n) for tf, n in TIMEFRAMES.items()}
+            if price <= 0: continue
 
-        output[ticker] = {
-            "category": categories[ticker],
-            "price": price,
-            "change": float(row.get("change", 0) or 0),
-            "analysis": analysis,
-        }
+            analysis = {tf: compute_signal(price, hist, n) for tf, n in TIMEFRAMES.items()}
 
+            output[ticker] = {
+                "category": categories[ticker],
+                "price": round(price, 2),
+                "change": pct_change,
+                "analysis": analysis,
+            }
+            print(f"[ok] Processed {ticker} (${price})")
+            
+        except Exception as exc:
+            print(f"[warn] Failed to process {ticker}: {exc}")
+
+    # Write output to the main data.json file
     DATA_JSON.write_text(
         json.dumps(
             {
                 "generated_at": dt.datetime.utcnow().isoformat() + "Z",
-                "disclaimer": "Automated technical analysis only. Not financial advice.",
+                "disclaimer": "Automated technical analysis only. Powered by Yahoo Finance.",
                 "stocks": output,
             },
             indent=2,
             default=str,
         )
     )
-    print(f"Wrote {len(output)} stocks to {DATA_JSON}")
+    print(f"Successfully compiled metrics for {len(output)} stocks to {DATA_JSON}")
 
 if __name__ == "__main__":
     main()
