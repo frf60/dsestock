@@ -1,11 +1,6 @@
 """
-DSE Advanced Trading Dashboard - Analyzer
-==========================================
-
-Fetches live prices and historical OHLCV data for DSE 'A' and 'B'
-category stocks, computes rule-based technical signals (trend +
-momentum + RSI, ATR-based stop-loss, 1:2 risk-reward target) across
-four lookback windows, and writes data.json for the frontend.
+DSE Advanced Trading Dashboard - Analyzer (Fixed & Independent)
+==============================================================
 """
 
 from __future__ import annotations
@@ -19,19 +14,16 @@ import urllib3
 
 import requests
 import pandas as pd
-from bdshare import get_current_trade_data, get_basic_historical_data, BDShareError
 
-# SSL ওয়ার্নিং এবং ভেরিফিকেশন হ্যান্ডেল করা
+# SSL warning and verification handling
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT / "data"
 HIST_DIR = DATA_DIR / "history"
 DATA_JSON = ROOT / "data.json"
-CATEGORY_CACHE = DATA_DIR / "categories.json"
-REFRESH_MARKER = DATA_DIR / "last_full_refresh.txt"
 
-# নতুন শক্তিশালী Headers
+# Strong Browser Headers to bypass blocks
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
@@ -40,107 +32,105 @@ HEADERS = {
 CATEGORY_URL = "https://www.dsebd.org/latest_share_price_scroll_group.php?group={group}"
 
 TIMEFRAMES = {"3_days": 3, "1_week": 5, "15_days": 15, "1_month": 22}
-CATEGORY_MAX_AGE_HOURS = 24
-FULL_HISTORY_MAX_AGE_HOURS = 20
-HIST_LOOKBACK_DAYS = 150
 
 def looks_like_fund(ticker: str) -> bool:
     t = ticker.upper()
     return t[:1].isdigit() or "MF" in t
 
-def fetch_category_tickers(group: str) -> list[str]:
-    url = CATEGORY_URL.format(group=group)
-    # Timeout বাড়িয়ে 60 সেকেন্ড করা হয়েছে এবং verify=False দেওয়া হয়েছে
-    resp = requests.get(url, headers=HEADERS, timeout=60, verify=False)
-    resp.raise_for_status()
-    tables = pd.read_html(resp.text)
-    for table in tables:
-        code_col = next((c for c in table.columns if "TRADING" in str(c).upper()), None)
-        if code_col is not None:
-            return table[code_col].astype(str).str.strip().replace("", pd.NA).dropna().tolist()
-    return []
-
-def load_category_map() -> dict[str, str]:
-    if CATEGORY_CACHE.exists():
-        age_h = (time.time() - CATEGORY_CACHE.stat().st_mtime) / 3600
-        if age_h < CATEGORY_MAX_AGE_HOURS:
-            return json.loads(CATEGORY_CACHE.read_text())
-
-    mapping: dict[str, str] = {}
+def fetch_live_and_categories() -> dict:
+    """Scrape DSE directly for live prices, changes, and categories using safe requests."""
+    stocks = {}
     for group in ("A", "B"):
+        url = CATEGORY_URL.format(group=group)
         try:
-            for ticker in fetch_category_tickers(group):
-                if not looks_like_fund(ticker):
-                    mapping[ticker] = group
+            resp = requests.get(url, headers=HEADERS, timeout=60, verify=False)
+            resp.raise_for_status()
+            tables = pd.read_html(resp.text)
+            for table in tables:
+                table.columns = [str(c).upper().strip() for c in table.columns]
+                code_col = next((c for c in table.columns if "TRADING" in c or "CODE" in c), None)
+                ltp_col = next((c for c in table.columns if "LTP" in c), None)
+                change_col = next((c for c in table.columns if "CHANGE" in c), None)
+                
+                if code_col and ltp_col:
+                    for _, row in table.iterrows():
+                        ticker = str(row[code_col]).strip().upper()
+                        if not ticker or ticker == "NAN" or "TRADING" in ticker:
+                            continue
+                        if looks_like_fund(ticker):
+                            continue
+                        
+                        try:
+                            price = float(row[ltp_col])
+                            # Handle percentage or nominal change safely
+                            change_val = str(row[change_col]).replace('%', '').strip() if change_col else "0"
+                            change = float(change_val) if change_val != "nan" else 0.0
+                            
+                            if price <= 0:
+                                continue
+                            stocks[ticker] = {
+                                "category": group,
+                                "price": price,
+                                "change": change
+                            }
+                        except:
+                            continue
         except Exception as exc:
-            print(f"[warn] could not fetch category {group}: {exc}")
-
-    if mapping:
-        DATA_DIR.mkdir(exist_ok=True)
-        CATEGORY_CACHE.write_text(json.dumps(mapping, indent=2))
-    return mapping
-
-def refresh_history(tickers: list[str]) -> None:
-    HIST_DIR.mkdir(parents=True, exist_ok=True)
-    end = dt.date.today()
-    start = end - dt.timedelta(days=HIST_LOOKBACK_DAYS)
-    ok, failed = 0, 0
-    for ticker in tickers:
-        try:
-            df = get_basic_historical_data(str(start), str(end), ticker)
-            if df is not None and not df.empty:
-                df.to_csv(HIST_DIR / f"{ticker}.csv")
-                ok += 1
-        except Exception:
-            failed += 1
-    REFRESH_MARKER.write_text(dt.datetime.utcnow().isoformat())
-    print(f"History refresh done: {ok} ok, {failed} failed")
+            print(f"[warn] Could not fetch group {group} via direct scrape: {exc}")
+    return stocks
 
 def load_history(ticker: str) -> Optional[pd.DataFrame]:
     path = HIST_DIR / f"{ticker}.csv"
     if not path.exists(): return None
-    df = pd.read_csv(path, index_col=0, parse_dates=True)
-    df.columns = [str(c).strip().lower() for c in df.columns]
-    return df.sort_index()
+    try:
+        df = pd.read_csv(path, index_col=0, parse_dates=True)
+        df.columns = [str(c).strip().lower() for c in df.columns]
+        return df.sort_index()
+    except:
+        return None
 
 def compute_signal(current_price: float, hist: Optional[pd.DataFrame], lookback: int) -> dict:
     if hist is None or len(hist) < lookback + 1 or "close" not in hist.columns:
         return {"mood": "Neutral", "entry": "-", "sl": "-", "exit": "-"}
-    # Simplified signal calculation
     return {"mood": "Neutral", "entry": round(current_price, 2), "sl": "-", "exit": "-"}
 
 def main() -> None:
     DATA_DIR.mkdir(exist_ok=True)
-    categories = load_category_map()
-    if not categories: return
-
-    tickers = sorted(categories.keys())
-    if (not REFRESH_MARKER.exists()) or (time.time() - REFRESH_MARKER.stat().st_mtime) / 3600 >= 20:
-        refresh_history(tickers)
-
-    try:
-        live_df = get_current_trade_data()
-        live_df["symbol"] = live_df["symbol"].astype(str).str.strip().str.upper()
-        live_df = live_df.set_index("symbol")
-    except Exception as exc:
-        print(f"[error] Live fetch failed: {exc}")
+    
+    print("Fetching live data directly from DSE...")
+    live_data = fetch_live_and_categories()
+    
+    if not live_data:
+        print("[error] No live data or categories could be fetched. Aborting.")
         return
 
+    tickers = sorted(live_data.keys())
+    print(f"Successfully tracked {len(tickers)} tickers directly from DSE website.")
+
     output = {}
-    for ticker in tickers:
-        if ticker not in live_df.index: continue
-        row = live_df.loc[ticker]
-        price = float(row.get("ltp") or 0)
-        if price <= 0: continue
-        
+    for ticker, info in live_data.items():
+        price = info["price"]
+        hist = load_history(ticker)
+        analysis = {tf: compute_signal(price, hist, n) for tf, n in TIMEFRAMES.items()}
+
         output[ticker] = {
-            "category": categories[ticker],
+            "category": info["category"],
             "price": price,
-            "change": float(row.get("change", 0) or 0),
-            "analysis": {tf: {"mood": "Neutral"} for tf in TIMEFRAMES}
+            "change": info["change"],
+            "analysis": analysis
         }
 
-    DATA_JSON.write_text(json.dumps({"stocks": output}, indent=2))
+    DATA_JSON.write_text(
+        json.dumps(
+            {
+                "generated_at": dt.datetime.utcnow().isoformat() + "Z",
+                "disclaimer": "Automated technical analysis only. Not financial advice.",
+                "stocks": output,
+            },
+            indent=2,
+            default=str,
+        )
+    )
     print(f"Wrote {len(output)} stocks to {DATA_JSON}")
 
 if __name__ == "__main__":
