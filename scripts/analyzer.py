@@ -1,7 +1,6 @@
-
 """
-DSE Advanced Trading Dashboard - Yahoo Finance Backend
-======================================================
+DSE Advanced Trading Dashboard - High-Speed Cloud Mirror Backend
+================================================================
 """
 
 from __future__ import annotations
@@ -12,7 +11,7 @@ import datetime as dt
 from pathlib import Path
 from typing import Optional
 import pandas as pd
-import yfinance as yf
+import requests
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT / "data"
@@ -27,14 +26,13 @@ TIMEFRAMES = {
 }
 
 def load_category_map() -> dict[str, str]:
-    """Loads categories. If cache doesn't exist, initializes with a fallback list."""
+    """Loads categories. If cache doesn't exist, initializes with standard list."""
     if CATEGORY_CACHE.exists():
         try:
             return json.loads(CATEGORY_CACHE.read_text())
         except Exception:
             pass
 
-    # High-signal fallback list of major DSE A & B category stocks
     fallback = {
         "GP": "A", "BATBC": "A", "SQURPHARMA": "A", "RENATA": "A", "BEXIMCO": "A",
         "BRACBANK": "A", "EBL": "A", "CITYBANK": "A", "JAMUNAOIL": "A", "MPETROLEUM": "A",
@@ -112,31 +110,89 @@ def compute_signal(current_price: float, hist: pd.DataFrame, lookback: int) -> d
 
     return {"mood": mood, "entry": entry, "sl": sl, "exit": exit_target}
 
+def fetch_live_feed() -> dict[str, dict]:
+    """Fetches the latest real-time tracking metrics from the cloud node."""
+    url = "https://cloud.amarstock.com/api/feed/latest-price"
+    try:
+        response = requests.get(url, timeout=15)
+        if response.status_code != 200:
+            return {}
+        data = response.json()
+        feed = {}
+        for item in data:
+            ticker = item.get("Scrip") or item.get("Symbol")
+            if not ticker:
+                continue
+            ticker = str(ticker).strip().upper()
+            
+            feed[ticker] = {
+                "price": float(item.get("LTP", 0)),
+                "change": float(item.get("ChangeP", 0) or item.get("YcpChanageP", 0))
+            }
+        return feed
+    except Exception as e:
+        print(f"[error] Failed to parse live cloud metrics: {e}")
+        return {}
+
+def fetch_historical_candles(ticker: str, count: int = 50) -> Optional[pd.DataFrame]:
+    """Fetches historical price candles for technical calculation."""
+    url = f"https://cloud.amarstock.com/api/feed/ClosePriceHistoryByTicker?ticker={ticker}&Count={count}"
+    try:
+        response = requests.get(url, timeout=15)
+        if response.status_code != 200:
+            return None
+        data = response.json()
+        if not data or not isinstance(data, list):
+            return None
+            
+        df = pd.DataFrame(data)
+        rename_map = {
+            'ClosePrice': 'close', 'HighPrice': 'high', 'LowPrice': 'low', 'OpenPrice': 'open',
+            'closePrice': 'close', 'highPrice': 'high', 'lowPrice': 'low', 'openPrice': 'open'
+        }
+        df = df.rename(columns=rename_map)
+        
+        for col in ['close', 'high', 'low']:
+            if col in df.columns:
+                df[col] = pd.to_numeric(df[col], errors='coerce')
+                
+        # Reversing data arrays to align oldest-to-newest for rolling calculations
+        df = df.iloc[::-1].reset_index(drop=True)
+        return df
+    except Exception:
+        return None
+
 def main() -> None:
     DATA_DIR.mkdir(exist_ok=True)
     categories = load_category_map()
     tickers = sorted(categories.keys())
     
-    print(f"Tracking {len(tickers)} tickers via Yahoo Finance backend...")
+    print(f"Tracking {len(tickers)} tickers via Cloud Mirror Node...")
+    
+    live_data = fetch_live_feed()
+    if not live_data:
+        print("[critical] Live feed download failed. Aborting execution loop.")
+        return
+
     output = {}
 
     for ticker in tickers:
+        if ticker not in live_data:
+            print(f"[warn] Ticker {ticker} missing from live feed registry.")
+            continue
+            
         try:
-            yf_ticker = f"{ticker}.BD"
-            stock = yf.Ticker(yf_ticker)
-            
-            hist = stock.history(period="6mo")
-            if hist.empty:
-                print(f"[warn] No data found for {yf_ticker}")
-                continue
-                
-            hist.columns = [str(c).strip().lower() for c in hist.columns]
-            
-            price = float(hist["close"].iloc[-1])
-            prev_close = float(hist["close"].iloc[-2]) if len(hist) > 1 else price
-            pct_change = round(((price - prev_close) / prev_close) * 100, 2)
+            metrics = live_data[ticker]
+            price = metrics["price"]
+            pct_change = metrics["change"]
 
-            if price <= 0: continue
+            if price <= 0:
+                continue
+
+            hist = fetch_historical_candles(ticker, count=45)
+            if hist is None or hist.empty:
+                print(f"[warn] No historical matrix generated for {ticker}")
+                continue
 
             analysis = {tf: compute_signal(price, hist, n) for tf, n in TIMEFRAMES.items()}
 
@@ -146,17 +202,18 @@ def main() -> None:
                 "change": pct_change,
                 "analysis": analysis,
             }
-            print(f"[ok] Processed {ticker} (${price})")
+            print(f"[ok] Compiled data for {ticker} (${price})")
+            time.sleep(0.2)  # Polite pause between nodes
             
         except Exception as exc:
-            print(f"[warn] Failed to process {ticker}: {exc}")
+            print(f"[warn] Execution fault on processing token {ticker}: {exc}")
 
-    # Write output directly into data.json for the frontend
+    # Write calculated data back directly into data.json
     DATA_JSON.write_text(
         json.dumps(
             {
                 "generated_at": dt.datetime.utcnow().isoformat() + "Z",
-                "disclaimer": "Automated technical analysis only. Powered by Yahoo Finance.",
+                "disclaimer": "Automated technical calculations. Data powered by open mirror cloud node.",
                 "stocks": output,
             },
             indent=2,
