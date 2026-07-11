@@ -21,10 +21,14 @@ import time
 import datetime as dt
 from pathlib import Path
 from typing import Optional
+import urllib3  # নতুন ইমপোর্ট
 
 import requests
 import pandas as pd
 from bdshare import get_current_trade_data, get_basic_historical_data, BDShareError
+
+# SSL ওয়ার্নিং বন্ধ করার জন্য
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT / "data"
@@ -58,7 +62,8 @@ def looks_like_fund(ticker: str) -> bool:
 def fetch_category_tickers(group: str) -> list[str]:
     """Scrape one DSE category page (A or B) for its list of trading codes."""
     url = CATEGORY_URL.format(group=group)
-    resp = requests.get(url, headers=HEADERS, timeout=20)
+    # verify=False যোগ করা হয়েছে
+    resp = requests.get(url, headers=HEADERS, timeout=20, verify=False)
     resp.raise_for_status()
     tables = pd.read_html(resp.text)
     for table in tables:
@@ -273,3 +278,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
